@@ -1,6 +1,5 @@
 import { useState } from "react";
-import {
-  Box,
+import { Box,
   IconButton,
   InputBase,
   Typography,
@@ -9,7 +8,6 @@ import {
   FormControl,
   useTheme,
   useMediaQuery,
-  Icon,
 } from "@mui/material";
 import {
   Search,
@@ -20,7 +18,6 @@ import {
   Help,
   Menu,
   Close,
-  FileCopy,
 } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { setMode, setLogout } from "state";
@@ -34,31 +31,28 @@ const Navbar = () => {
   const isNonMobile = useMediaQuery("(min-width:1000px)");
   const theme = useTheme();
   const neutralLight = theme.palette.neutral.light;
-  const neutralDark = theme.palette.neutral.dark;
+  const dark = theme.palette.neutral.dark;
   const background = theme.palette.background.default;
   const primaryLight = theme.palette.primary.light;
-  const alt = theme.palette.alt;
-  // const fullName=`${user.firstName} ${user.lastName}`;
+  const alt = theme.palette.background.alt;
 
+  const fullName = `${user.firstName} ${user.lastName}`;
   return (
-    <>
-      <nav className={`flex justify-between items-center p-4 bg-${alt}`}>
+    <>  
+      <div  style={{ backgroundColor: alt}} className={`flex justify-between items-center pt-4 pb-4 pl-[6%] pr-[6%] `}>
         {isNonMobile && (
-          <div
-            className={` search bg-${neutralLight} border-radius-3 rounded-lg gap-8 pt-1 pb-1 pr-2 pl-2 flex justify-between items-center`}
-          >
-            <InputBase placeholder="Search">
+         <div  style={{ backgroundColor: neutralLight }}
+         className={`search  rounded-lg gap-12 pt-[0.1rem] pb-[0.1rem] pr-[1.5rem] pl-[1.5rem] flex justify-between items-center`}
+       >
+            <InputBase placeholder="Search"/>
               <IconButton>
                 <Search />
               </IconButton>
-            </InputBase>
           </div>
         )}
         <div
           className="name font-bold text-base sm:text-lg md:text-xl lg:text-2xl text-blue-400 hover:text-blue-700 hover:cursor-pointer"
-          onClick={() => {
-            window.location.href = "/home";
-          }}
+          onClick={() => navigate("/home")}
         >
           SocioSphere
         </div>
@@ -67,22 +61,25 @@ const Navbar = () => {
         {isNonMobile ? (
           <div className="flex justify-between items-center gap-8">
             <IconButton onClick={() => dispatch(setMode())}>
-              {theme.palette.mode === "dark" ? (
-                <DarkMode className="text-xl" />
-              ) : (
-                <LightMode className="text-xl" />
-              )}
+            {theme.palette.mode === "dark" ? (
+              <DarkMode sx={{ fontSize: "25px" }} />
+            ) : (
+              <LightMode sx={{ color: dark, fontSize: "25px" }} />
+            )}
             </IconButton>
             <Message sx={{ fontSize: "25px" }} />
             <Notifications sx={{ fontSize: "25px" }} />
             <Help sx={{ fontSize: "25px" }} />
-            <FormControl variant="standard">
-              <Select
-                className={`bg-${neutralLight} w-150px rounded-0.25rem p-0.25rem 1rem focus:bg-${neutralLight}`}
+            <FormControl variant="standard" value={fullName}>
+              <Select value={fullName} style={{ backgroundColor: neutralLight }}
+                className={` w-[150px] rounded-[0.25rem] pt-1 pb-1 pr-4 pl-4  focus:bg-${neutralLight} "& .MuiSvgIcon-root": {
+                  pr: "0.25rem",
+                  width: "3rem",
+                }`}
                 input={<InputBase />}
               >
-                <MenuItem>
-                  <Typography></Typography>
+                <MenuItem  value={fullName}>
+                  <Typography>{fullName}</Typography>
                 </MenuItem>
                 <MenuItem onClick={() => dispatch(setLogout())}>
                   Log Out
@@ -98,19 +95,17 @@ const Navbar = () => {
 
         {/* Mobile Nav */}
         {!isNonMobile && MenuToggle && (
-          <Box className={`fixed right-0 bottom-0 h-full z-10 max-w-500 min-w-300 bg-${background} `}>
-            <Box display="flex" justifyContent="flex-end" p="1rem">
-            <IconButton
-              onClick={() => SetMenuToggle(!MenuToggle)}
-            >
-              <Close />
-            </IconButton>
-          </Box>
+          <div  className={`fixed right-0 bottom-0 h-full z-10 w-[500px] min-w-300`}>
+            <Box className="flex justify-end p-4">
+              <IconButton onClick={() => SetMenuToggle(!MenuToggle)}>
+                <Close />
+              </IconButton>
+            </Box>
             {/* Menu Items */}
-            <div className=" menu flex flex-row  items-center justify-center gap-12 ">
+            <div style={{ backgroundColor: neutralLight  }} className=" menu flex flex-row  items-center justify-center gap-12 ">
               <IconButton
                 onClick={() => dispatch(setMode())}
-                className="text-x"
+                className="text-xl"
               >
                 {theme.palette.mode === "dark" ? (
                   <DarkMode className="text-xl" />
@@ -121,13 +116,13 @@ const Navbar = () => {
               <Message sx={{ fontSize: "25px" }} />
               <Notifications sx={{ fontSize: "25px" }} />
               <Help sx={{ fontSize: "25px" }} />
-              <FormControl variant="standard">
-                <Select
-                  className={`bg-${neutralLight} w-150px rounded-0.25rem p-0.25rem 1rem focus:bg-${neutralLight}`}
+              <FormControl variant="standard" value={fullName}>
+                <Select value={fullName}
+                  className={`bg-${neutralLight} w-[150px] rounded-[0.25rem] pt-1 pb-1 pr-4 pl-4  focus:bg-${neutralLight}`}
                   input={<InputBase />}
                 >
-                  <MenuItem>
-                    <Typography>Hello</Typography>
+                  <MenuItem value={fullName}>
+                    <Typography>{fullName}</Typography>
                   </MenuItem>
                   <MenuItem onClick={() => dispatch(setLogout())}>
                     Log Out
@@ -135,9 +130,9 @@ const Navbar = () => {
                 </Select>
               </FormControl>
             </div>
-          </Box>
+          </div>
         )}
-      </nav>
+      </div>
     </>
   );
 };

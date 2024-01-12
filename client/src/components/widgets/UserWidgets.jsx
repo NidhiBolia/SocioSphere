@@ -1,63 +1,74 @@
-import React, { useEffect, useState } from 'react';
 import {
   ManageAccountsOutlined,
   EditOutlined,
   LocationOnOutlined,
   WorkOutlineOutlined,
 } from "@mui/icons-material";
-import { Typography, Divider, useTheme } from '@mui/material';
-import UserImage from 'components/UserImage';
-import Widgets from 'components/Widgets';
-import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import {  Typography, Divider, useTheme } from "@mui/material";
+import UserImage from "components/UserImage";
+import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-export default function UserWidgets({ userId, picturePath }) {
-  const [user, setUser] = useState(null);
+const UserWidget = ({ userId, picturePath }) => {
+  const [user, setUser] = useState();
   const { palette } = useTheme();
   const navigate = useNavigate();
   const token = useSelector((state) => state.token);
-  const dark = palette.neutral.dark;
+  // const dark = palette.neutral.dark;
   const medium = palette.neutral.medium;
   const main = palette.neutral.main;
-
+  const theme=useTheme();
+  const background = theme.palette.background.alt;
   const getUser = async () => {
-    const response = await fetch(`http://localhost:3001/users/${userId}`, {
-      method: 'GET',
-      headers: { Authorization: `Bearer ${token}` },
-    });
-
-    const data = await response.json();
-    setUser(data);
+    try {
+      const response = await fetch(`http://localhost:3001/users/${userId}`, {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await response.json();
+      setUser(data);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
   };
 
   useEffect(() => {
     getUser();
-  }, [userId, token]);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!user) {
     return null;
   }
 
-  const { firstName, lastName, location, occupation, viewedProfile, impressions, friends } = user;
+  const {
+    firstName,
+    lastName,
+    location,
+    occupation,
+    viewedProfile,
+    impressions,
+    friends,
+  } = user;
 
   return (
-    <div>
-   <Widgets>
-    <div className='flex justify-between  items-center gap-2 pb-8 ' onClick={()=>navigate(`/profile/${userId}`)}>
-    <div className='flex justify-between  items-center'>
-      <UserImage image={picturePath}/>
-      <div>
-        <Typography variant='h4' color={dark} fontWeight="500" sx={{"&:hover":{color:palette.primary.light,cursor:"pointer" }}}>
-          {firstName} {lastName}
-        </Typography>
-        <Typography color={medium}>{friends.length}friends</Typography>
-      </div>
-      <ManageAccountsOutlined color={main} />
+  <div  style={{ backgroundColor: background  }} className={`px-6 pt-6 pb-3  bg-gray-100 rounded-md`}>
+    <div className='flex justify-between items-center gap-2' onClick={() => navigate(`/profile/${userId}`)}>
+    <div className='flex justify-between items-center gap-4'>
+    <UserImage image={picturePath} />
+    <div className='hover:text-gray-400 text-xl hover:cursor-pointer '>
+      <span>{firstName} {lastName}</span>
+      <Typography color={medium}>{friends.length} friends</Typography>
     </div>
-    <Divider/>
+    </div>
+    <ManageAccountsOutlined color={main} />
+  </div>
+  <Divider />
+
+
 
     {/* location and occupation */}
-    <div className="second p-4 ">
+    <div className="second pt-2 pb-2 ">
       <div className="flex items-center gap-4 mb-2">
       <LocationOnOutlined fontSize="large" sx={{ color: main }} />
         <Typography color={medium}>{location}</Typography>
@@ -67,26 +78,26 @@ export default function UserWidgets({ userId, picturePath }) {
         <Typography color={medium}>{occupation}</Typography>
       </div>
     </div>
-
+    <Divider />
     {/* impressions and viewed profile */}
-    <div className='p-4'>
-    <div className='flex  justify-betweenitems-center'>
-    <Typography color={medium}>Viewed Profile</Typography>
-    <Typography color={main} fontWeight="500">{viewedProfile}</Typography>
+    <div className='pt-4'>
+    <div className='flex  justify-between items-center mb-2'>
+    <Typography color={medium}>Viewed Profile:</Typography>
+    <Typography color={main} fontWeight="500"> {viewedProfile} </Typography>
     </div>
-    <div className='flex  justify-betweenitems-center'>
-    <Typography color={medium}>Impressions</Typography>
+    <div className='flex  justify-between items-center'>
+    <Typography color={medium}>Impressions:</Typography>
     <Typography color={main} fontWeight="500">{impressions}</Typography>
     </div>
     </div>
-
+    <Divider />
     {/* edit profile */}
-    <div className='p-4'>
+    <div className='pt-4'>
       <Typography fontSize="1rem" color={main} fontWeight="500" mb="1rem">Social Profiles</Typography>
       {/* twitter */}
       <div className='flex justify-between items-center gap-4 mb-2'>
       <div className='flex justify-between items-center gap-4 '>
-      <img src="../assets/twitter.png"></img>
+      <img src="../assets/twitter.png" alt="twitter"></img>
       <div>
         <Typography color={main} fontWeight="500">
           Twitter
@@ -99,7 +110,7 @@ export default function UserWidgets({ userId, picturePath }) {
       {/* Linkedin */}
       <div className='flex justify-between items-center gap-4 '>
       <div className='flex justify-between items-center gap-4 '>
-      <img src="../assets/linkedin.png"></img>
+      <img src="../assets/linkedin.png" alt="linkdin"></img>
       <div>
         <Typography color={main} fontWeight="500">
           Linkedin
@@ -113,8 +124,7 @@ export default function UserWidgets({ userId, picturePath }) {
 
 
     {/* end */}
-    </div>
-   </Widgets>
-    </div>
+   </div>
   );
 }
+export default UserWidget;

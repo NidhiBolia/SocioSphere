@@ -32,37 +32,38 @@ export const getUserFriends = async (req, res) => {
     }
 };
 
-/*UPDATE*/  
+/* UPDATE */
 export const addRemoveFriend = async (req, res) => {
-    try{
-        const {id,friendID}=req.params;
-        const user=await User.findById(id);
+    try {
+        const { id, friendID } = req.params;
+        const user = await User.findById(id);
         const friend = await User.findById(friendID);
 
         if (user.friends.includes(friendID)) {
-            user.friends = user.friends.filter((id) => id !== friendID);
-            friend.friends = friend.friends.filter((id) => id !== id);
-} else {
-    user.friends.push(friendID);
-    friend.friends.push(id);
-}
+            user.friends = user.friends.filter((friend) => friend !== friendID);
+            friend.friends = friend.friends.filter((friend) => friend !== id);
+        } else {
+            user.friends.push(friendID);
+            friend.friends.push(id);
+        }
 
         await user.save();
         await friend.save();
 
-        const friends=await Promise.all(
-            user.friends.map((id)=>User.findById(id))
+        const updatedUser = await User.findById(id);
+        const updatedFriends = await Promise.all(
+            updatedUser.friends.map((friendId) => User.findById(friendId))
         );
-    
-        const formattedFriends=friends.map(
-            ({_id,firstName,lastName,occupation,location,picturePath})=>
-             {
-                return {_id,firstName,lastName,occupation,location,picturePath};
+
+        const formattedFriends = updatedFriends.map(
+            ({ _id, firstName, lastName, occupation, location, picturePath }) => {
+                return { _id, firstName, lastName, occupation, location, picturePath };
             }
         );
-        res.status(200).json(formattedFriends);
-    }catch(err){
-        res.status(404).json(err);
-    }
 
-}
+        res.status(200).json(formattedFriends);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+};

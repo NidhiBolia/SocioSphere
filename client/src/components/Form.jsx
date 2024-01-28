@@ -102,7 +102,7 @@ const Form = () => {
   };
 
   return (
-    <Formik
+<Formik
       onSubmit={handleFormSubmit}
       initialValues={isLogin ? initialValuesLogin : initialValuesRegister}
       validationSchema={isLogin ? loginSchema : registerSchema}
@@ -117,8 +117,8 @@ const Form = () => {
         setFieldValue,
         resetForm,
       }) => (
-        <form onSubmit={handleSubmit}>
-          <div className= {`col-span-${isNonMobile ? 'auto' : '4'} grid `} style={{ gridTemplateColumns: "repeat(4, minmax(0, 1fr))", gap: "30px" }}>
+        <form onSubmit={handleSubmit} >
+          <div className={`grid text-black ${isNonMobile ? 'grid-cols-4' : 'grid-cols-auto'} gap-4`}>
             {isRegister && (
               <>
                 <TextField
@@ -165,8 +165,7 @@ const Form = () => {
                   helperText={touched.occupation && errors.occupation}
                   sx={{ gridColumn: "span 4" }}
                 />
-                <div className={`col-span-4 border border-${palette.neutral.medium} rounded-5 p-4`}
-                >
+                <div className={`col-span-4 border border-${palette.neutral.medium} rounded-5 p-4`}>
                   <Dropzone
                     acceptedFiles=".jpg,.jpeg,.png"
                     multiple={false}
@@ -177,9 +176,7 @@ const Form = () => {
                     {({ getRootProps, getInputProps }) => (
                       <Box
                         {...getRootProps()}
-                        border={`2px dashed ${palette.primary.main}`}
-                        p="1rem"
-                        sx={{ "&:hover": { cursor: "pointer" } }}
+                        className={`border-dashed border-2 border-${palette.primary.main} p-2 hover:cursor-pointer`}
                       >
                         <input {...getInputProps()} />
                         {!values.picture ? (

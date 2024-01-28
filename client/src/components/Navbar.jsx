@@ -32,11 +32,13 @@ const Navbar = () => {
   const theme = useTheme();
   const neutralLight = theme.palette.neutral.light;
   const dark = theme.palette.neutral.dark;
-  const background = theme.palette.background.default;
-  const primaryLight = theme.palette.primary.light;
+  // const background = theme.palette.background.default;
+  // const primaryLight = theme.palette.primary.light;
   const alt = theme.palette.background.alt;
 
-  const fullName = `${user.firstName} ${user.lastName}`;
+  // const fullName = `${user.firstName} ${user.lastName}`;
+  const fullName = user?.firstName ? `${user.firstName} ${user.lastName}` : "";
+
   return (
     <>  
       <div  style={{ backgroundColor: alt}} className={`flex justify-between items-center pt-4 pb-4 pl-[6%] pr-[6%] `}>
@@ -102,7 +104,7 @@ const Navbar = () => {
               </IconButton>
             </Box>
             {/* Menu Items */}
-            <div style={{ backgroundColor: neutralLight  }} className=" menu flex flex-row  items-center justify-center gap-12 ">
+            <div style={{ backgroundColor: neutralLight  }} className=" menu flex flex-col  items-center justify-center gap-12 ">
               <IconButton
                 onClick={() => dispatch(setMode())}
                 className="text-xl"
